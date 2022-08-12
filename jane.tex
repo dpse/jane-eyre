@@ -1,0 +1,583 @@
+\documentclass[
+twoside,
+10pt,
+french,
+german,
+british,
+%draft,
+final,
+%showtrims,showframe,showboxes
+%showtrims
+]{memoir}
+
+\usepackage{memhfixc}
+\usepackage{shellesc}
+%\usepackage[l2tabu, orthodox]{nag}
+\usepackage{ifpdf,ifxetex,ifluatex}
+\usepackage{luaotfload,luacode}
+\usepackage{relsize,etoolbox}
+\usepackage{ifthen}
+
+\usepackage[main=british]{babel}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames,cmyk]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{fadings}
+\usepackage{pgfornament}
+%\usepackage{epstopdf}
+\usepackage{marginfit}
+\usepackage{ragged2e}
+
+\usepackage[en-US,en-GB,useregional]{datetime2}
+\DTMlangsetup[en-US]{ord=level,monthyearsep={,\space}} %ord=raise
+\DTMlangsetup[en-GB]{ord=level,monthyearsep={,\space}}
+
+\usepackage[activate=true,protrusion=true,expansion=true,tracking=true,babel=true,verbose=true,
+factor=1000, % default factor is 1000
+stretch=40, % default stretch and shrink is 20
+shrink=30,
+nopatch % breaks csquotes in verse otherwise
+]{microtype}
+
+\usepackage[all]{nowidow} %Try to avoid widows
+\usepackage{lua-widow-control}
+\usepackage{lettrine}
+\usepackage{fontspec}
+\usepackage{realscripts}
+\usepackage{fnpct}
+
+\usepackage[maxlevel=3,autostyle,autopunct,strict,french=guillemets,german=guillemets]{csquotes}
+%\MakeAutoQuote{"}{"}
+%\MakeAutoQuote{“}{”}
+%\MakeAutoQuote{‘}{’}
+
+% Fix marks for british quote style for csquotes
+\DeclareQuoteStyle[british]{english}% verified
+{\textquoteleft}
+[\textquoteleft]
+{\textquoteright}
+[0.05em]
+{\textquotedblleft}
+[\textquotedblleft]
+{\textquotedblright}
+
+\usepackage{bookmark}
+\usepackage{hyperref}
+%\usepackage[x-302]{pdfx} % Standard PDF/X-3:2002
+%\usepackage[english]{cleveref}
+\usepackage{caption}
+
+% Add missing definitions if running LuaTeX (needed by marginfit package)
+\ifluatex
+\let\pdfpagewidth\pagewidth
+\let\pdfpageheight\pageheight
+\let\pdfadjustspacing\adjustspacing
+\let\pdfprotrudechars\protrudechars
+\let\pdfnoligatures\ignoreligaturesinfont
+\let\pdffontexpand\expandglyphsinfont
+\let\pdfcopyfont\copyfont
+\let\pdfxform\saveboxresource
+\let\pdflastxform\lastsavedboxresourceindex
+\let\pdfrefxform\useboxresource
+\let\pdfximage\saveimageresource
+\let\pdflastximage\lastsavedimageresourceindex
+\let\pdflastximagepages\lastsavedimageresourcepages
+\let\pdfrefximage\useimageresource
+\let\pdfsavepos\savepos
+\let\pdflastxpos\lastxpos
+\let\pdflastypos\lastypos
+\let\pdfoutput\outputmode
+\let\pdfdraftmode\draftmode
+\let\pdfpxdimen\pxdimen
+\let\pdfinsertht\insertht
+\let\pdfnormaldeviate\normaldeviate
+\let\pdfuniformdeviate\uniformdeviate
+\let\pdfsetrandomseed\setrandomseed
+\let\pdfrandomseed\randomseed
+\let\pdfprimitive\primitive
+%\let\ifpdfprimitive\ifprimitive
+\let\ifpdfabsnum\ifabsnum
+\let\ifpdfabsdim\ifabsdim
+\newdimen\pdfeachlineheight
+\newdimen\pdfeachlinedepth
+\newdimen\pdflastlinedepth
+\newdimen\pdffirstlineheight
+\newdimen\pdfignoreddimen
+\fi
+
+% Replace em dashes with spaced en dashes
+%\begin{luacode}
+%	function em2en ( buff )
+%	return ( string.gsub ( buff, "%-%-%-", " -- " ) )
+%	end
+%	luatexbase.add_to_callback( "process_input_buffer", em2en, "em2en" )
+%\end{luacode}
+
+% Function for getting font glyphs by name
+\begin{luacode}
+	documentdata = documentdata or { }
+	documentdata.fontchar = function (chr)
+	local chr = luaotfload.aux.slot_of_name(font.current(), chr, false)
+	if chr and type(chr) == "number" then
+	tex.sprint(string.format([[\char"%X]], chr))
+	end
+	end
+\end{luacode}
+\def\fontchar#1{\directlua{documentdata.fontchar "#1"}}
+%	\fontchar{bullet.04}\\
+
+% Custom alternates
+%\directlua{
+%fonts.handlers.otf.addfeature{
+%	name = "oalt",
+%	type = "alternate",
+%	data =
+%	{
+%		["W"] = "W.alt",
+%		["w.sc"] = "w.scalt",	
+%	},
+%}
+%}
+
+\defaultfontfeatures{
+	Ligatures={TeX,Common}, %Contextual,Required
+	Numbers={OldStyle,Proportional},
+	%%Contextuals={Swash,LineInitial,LineFinal},
+	SmallCapsFeatures={LetterSpace=6},
+	%Kerning={On, Uppercase},
+	%%Scale=MatchLowercase,
+}
+
+%\setmainfont{Garamond Premier Pro}[RawFeature=+oalt] % Optical sizes are loaded automatically
+\setmainfont{EB Garamond}
+
+\newfontfamily\baskerville{Baskerville MT Std}
+\newfontfamily\bodoni{Bodoni LT Pro}
+\newfontfamily\canterbury{Canterbury}
+
+\newcommand{\SWshape}{\itshape\addfontfeatures{ItalicFeatures={Style=Swash,Contextuals={Swash}},Contextuals={Alternate},Ligatures={Rare}}}
+\newcommand{\textSW}[1]{{\SWshape #1}}
+\newcommand*{\fraction}[1]{{\addfontfeatures{Fractions=On}#1}}
+\newcommand{\oldstyle}{\addfontfeatures{Numbers={OldStyle,Proportional}}}
+\newcommand{\lining}{\addfontfeatures{Numbers={Lining,Proportional}}}
+\newcommand{\monospaced}{\addfontfeatures{Numbers={Monospaced}}}
+\newcommand*{\fleuron}{\symbol{\string"2766}}
+\newcommand*{\fleuronr}{\symbol{\string"2767}}
+\newcommand*{\et}{{\addfontfeature{Alternate=2}\&}}
+\newcommand*{\alt}[2][0]{{\addfontfeature{Alternate=#1}#2}} % Use alternates
+
+\newcommand*{\addchapterornament}[1]{%
+	\vspace*{-0.25cm}
+	\begin{center}
+		#1
+	\end{center}
+	\vspace*{0.25cm}
+}
+\newcommand*{\flower}[1]{%
+%\addchapterornament{\includegraphics[width=2cm,height=2cm,keepaspectratio]{ornaments/#1.pdf}}
+}
+
+%\newfontfamily\goudy[Scale=6]{LTC Goudy Initials}
+%\newfontface\firstlayer{LTCGOUDYINIT-NEW}
+%\newfontface\secondlayer{LTCGOUDYINIT-FLORA}
+%\newfontface\thirdlayer{LTCGoudyInitFill}
+%\renewcommand*{\LettrineFont}{\goudy}
+
+%\definecolor{lettrinecolor}{cmyk}{.85,.24,.54,.04}
+%\definecolor{lettrinecolor}{cmyk}{0.03,1.0,0.63,0.12}
+\definecolor{lettrinecolor}{cmyk}{0.0,1.0,0.91,0.37}
+\newcommand{\initialmaker}[1]{%
+	\firstlayer{\color{black!100}#1}%
+	\llap{\secondlayer{\color{black!0}#1}}%
+	%\llap{\thirdlayer{\color{black!75!red}#1}}%
+	\llap{\thirdlayer{\color{black!30}#1}}%
+}
+
+\newcount\zzc
+\makeatletter
+\def\zz{%
+	\ifnum\prevgraf<\c@L@lines
+	\zzc\z@
+	\loop
+	\ifnum\zzc<\prevgraf
+	\advance\zzc\@ne
+	\afterassignment\zzda\count@\L@parshape\relax
+	\repeat
+	\parshape\L@parshape
+	\fi}
+\def\zzda{\afterassignment\zzdb\dimen@}
+\def\zzdb{\afterassignment\zzdef\dimen@}
+\def\zzdef#1\relax{\edef\L@parshape{\the\numexpr\count@-1\relax\space #1}}
+\makeatother
+
+%\newcommand{\Lettrine}[2]{\lettrine[lines=4,depth=1,loversize=0.05,lhang=0.05]{\initialmaker{#1}}{#2}}
+\newcommand{\Lettrine}[2]{\lettrine[lines=4,depth=0,loversize=0.05,lhang=0.05]{#1}{#2}}
+
+% Set new penalties for orphans and widows
+\clubpenalty=9996
+\widowpenalty=9999
+\brokenpenalty=4991
+\predisplaypenalty=10000
+\postdisplaypenalty=1549
+\displaywidowpenalty=1602
+
+\makeatletter
+% Prevent page breaks before lists
+\@beginparpenalty=\@highpenalty
+% Prevent incorrect hyphenation and uneven right margin
+\emergencystretch=\maxdimen
+\makeatother
+
+% Strict check for marginpars
+\strictpagecheck
+
+% Footnote style
+%\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+% Default float placement
+\setfloatlocations{figure}{htbp}
+\setfloatlocations{table}{htbp}
+
+% Caption style
+\DeclareCaptionFont{figcapfont}{\scriptsize} %\small\poetica
+\DeclareCaptionJustification{raggedauto}{%
+	\checkoddpage
+	\ifoddpage \RaggedRight \else \RaggedLeft \fi
+}
+\captionsetup[figure]{font=figcapfont,labelformat=empty,justification=raggedauto}
+
+% Remove marks when setting verse
+\DeclareQuoteStyle{verse}
+{\textquoteleft}
+{\textquoteright}
+[0.05em]
+{\textquotedblleft}
+{\textquotedblright}
+
+\AtBeginEnvironment{quote}{}
+\AtBeginEnvironment{quotation}{}
+\AtBeginEnvironment{verse}{\setquotestyle{verse}\itshape} %\small
+\newcommand{\settoversewidth}[2]{\settowidth{#1}{\itshape{}#2}}
+
+% Abbreviations
+\makeatletter
+\newcommand\etc{{\addfontfeature{Alternate=0}\&}c\@ifnextchar.{}{.\@}}
+\newcommand\ie{i.e\@ifnextchar.{}{.\@}}
+\newcommand\Mr{Mr\@ifnextchar.{}{.\@}}
+\newcommand\Mrs{Mrs\@ifnextchar.{}{.\@}}
+\newcommand\St{St\@ifnextchar.{}{.\@}}
+\newcommand\AM{\textsc{am}}
+\newcommand\PM{\textsc{pm}}
+\newcommand\AD{\textsc{ad}}
+\makeatother
+
+% Page size
+\setstocksize{215mm}{135mm}
+\settrimmedsize{\stockheight}{\stockwidth}{*}
+\settrims{0pt}{0pt} % stock and trimmed size is the same
+
+% Page layout
+\medievalpage %[8]
+%\setlrmargins{*}{*}{1.61803}
+\setulmarginsandblock{18mm}{*}{1.61803}
+%\setlrmarginsandblock{0.5in}{0.5in}{*}
+%\setheadfoot{5mm}{3cm}
+%\setheaderspaces{*}{*}{0.5}
+%\setheaderspaces{*}{*}{1.618}
+\setheadfoot{\onelineskip}{3\onelineskip}
+
+% Try to avoid orphans and widows
+\setlength{\topskip}{1.6\topskip}
+
+% Check and fix layout
+\checkandfixthelayout[lines]
+
+% Allow bottom stretching
+\sloppybottom
+
+% Adjust margins for ide captions
+%\setmarginnotes{\marginparsep}{\marginparwidth}{\marginparsep}
+\setsidecaps{\marginparsep}{\marginparwidth} 
+\sidecapmargin{outer}
+\setsidecappos{b}
+
+\marginparmargin{outer}
+
+\setsidebars{\marginparsep}{\marginparwidth}{\onelineskip}{0pt}{\normalsize\normalfont}{\textheight}
+\sidebarmargin{outer}
+
+% Raised rule command
+%\newcommand*{\raisedrulefill}[2][0ex]{\leaders\hbox{\rule[#1]{1pt}{#2}}\hfill}
+
+% Default styles
+%\headstyles{bringhurst}
+
+\makeatletter
+\makechapterstyle{Jane}{%
+	\chapterstyle{ruled}
+	\renewcommand*{\chapnamefont}{\normalfont\SWshape\LARGE} %\addfontfeatures{LetterSpace=12}
+	\renewcommand*{\chapnumfont}{\LARGE\textcolor{black!50}}
+	\renewcommand*{\chaptitlefont}{\normalfont\SWshape\LARGE}
+	
+	%\renewcommand*{\printchaptername}{\centering}
+	%\renewcommand*{\printchapternum}{\chapnumfont\ifanappendix \thechapter \else \numtoName{\c@chapter}\fi}
+	
+	%\renewcommand\chapternamenum{}
+	\renewcommand\printchaptername{}
+	\renewcommand\printchapternum{}
+	\renewcommand\printchapternonum{}
+	\renewcommand\printchaptertitle[1]{\centering{\chaptitlefont ##1}}
+	
+	%\renewcommand*{\afterchaptertitle}{%
+	%	\vskip\onelineskip \hrule\vskip \afterchapskip}
+}
+\makeatother
+
+% Default chapter style
+\chapterstyle{Jane}
+
+% Table of contents style
+\renewcommand*{\cftpartfont}{\scshape}
+\renewcommand*{\cftpartpagefont}{\scshape}
+%\renewcommand*{\cftpartpresnum}{\addfontfeatures{Numbers=Lining}\color{red}}
+%\renewcommand*{\cftpartaftersnum}{\color{black}}
+\renewcommand{\partnumberline}[1]{}% Gobble part number in ToC
+\renewcommand*{\cftchapterfont}{\itshape}
+\renewcommand*{\cftchapterpagefont}{\itshape}
+%\renewcommand*{\cftchapterpresnum}{\addfontfeatures{Numbers=Lining}\color{red}}
+%\renewcommand*{\cftchapteraftersnum}{\color{black}}
+%\renewcommand*{\cftfigurefont}{\small}
+%\renewcommand*{\cfttablefont}{\small}
+\renewcommand{\chapternumberline}[1]{}% Gobble chapter number in ToC
+%\renewcommand{\cftchapterdotsep}{\cftdotsep}% Chapter dots in ToC
+\makeatletter
+%\setlength{\cftbeforepartskip}{1.0em \@plus\p@} % Default it 2.25 em
+\makeatother
+%\renewcommand{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fontchar{bullet.06}}}
+\renewcommand{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fleuronr}}
+
+%\renewcommand\chaptermark[1]{\markboth{##1}{##1}}
+
+% Adjust TOC width
+%\setlength\cftchapternumwidth{3em}
+\cftsetindents{part}{3.0em}{3.0em}
+\cftsetindents{chapter}{3.0em}{3.0em}
+\renewcommand{\cftpartafterpnum}{\hspace*{3.0em}}
+\renewcommand{\cftchapterafterpnum}{\hspace*{3.0em}}
+
+\newcommand*{\Chapter}[1]{\chapter*[#1]{#1}}
+\newcommand*{\FChapter}[2]{%
+\Chapter{#1}
+\flower{#2}
+}
+
+% Fancy headers
+\copypagestyle{Jane}{ruled}
+
+\makepsmarks{Jane}{%
+	\nouppercaseheads
+	\createmark{part}{left}{nonumber}{}{}
+	\createmark{chapter}{right}{nonumber}{}{}
+	\createplainmark{toc}{right}{\contentsname}
+	\createplainmark{lof}{right}{\listfigurename}
+	\createplainmark{lot}{right}{\listtablename}
+	\createplainmark{bib}{right}{\bibname}
+	\createplainmark{index}{right}{\indexname}
+	\createplainmark{glossary}{right}{\glossaryname}
+}
+
+\makeheadrule {Jane}{\linewidth}{0pt}
+\makeevenfoot {Jane}{\thepage}{}{}
+\makeoddfoot  {Jane}{}{}{\thepage}
+\makeevenhead {Jane}{}{\scshape\leftmark}{} % small caps
+\makeoddhead  {Jane}{}{\itshape\rightmark}{}
+
+% Plain style for chapter openings
+\copypagestyle{Jane-plain}{Jane}
+\makeheadrule{Jane-plain}{\linewidth}{0pt}
+\makeevenhead{Jane-plain}{}{}{}
+\makeoddhead{Jane-plain}{}{}{}
+
+% Use plain style for chapter pages
+\aliaspagestyle{chapter}{Jane-plain}
+
+\pagestyle{Jane}
+
+% Set up document info
+\title{Jane Eyre}
+\author{Charlotte Brontë}
+\date{\today}
+
+% PDF setup
+\hypersetup{
+	pdftitle={Jane Eyre},
+	pdfauthor={Charlotte Brontë},
+	pdfsubject={}
+}
+
+%\includeonly{chapters/1}
+
+\begin{document}
+	
+\markboth{\thetitle}{}
+
+%\begin{titlingpage}
+
+%	\begin{tikzpicture}[remember picture, overlay]
+%		\node[anchor=center, text centered] at (current page.center) {\includegraphics[scale=1]{titlepage.pdf}};
+%	\end{tikzpicture}
+	
+%\end{titlingpage}
+
+\begin{titlingpage}
+	
+	\begin{tikzpicture}[remember picture, overlay]
+	\node[anchor=center, text centered] at (current page.center) {%
+		\begin{minipage}{\linewidth}
+			\bodoni\addfontfeatures{LetterSpace=4}\normalsize
+			\centering
+			{\HUGE {\addfontfeatures{LetterSpace=24}JANE EYRE}\kern-2pt.}
+			\vspace*{1.5cm}
+			
+			{\larger\canterbury {\addfontfeatures{LetterSpace=4}An Autobiography}\kern-1pt.}
+			\vspace*{2cm}
+			
+			{\smaller\addfontfeatures{LetterSpace=2} EDITED BY}
+			\vspace*{0.5cm}
+			
+			{\addfontfeatures{LetterSpace=20}\LARGE CURRER BELL}
+			\vspace*{2cm}
+			
+			{\smaller {\addfontfeatures{LetterSpace=12} IN THREE VOLUMES}\kern-1.4pt.}
+			\vspace*{0.5cm}
+			
+			{VOL\kern-1pt. I\kern-1pt.}
+			\vspace*{3cm}
+			
+			{\addfontfeatures{LetterSpace=14}LONDON:}
+			\vspace*{1ex}
+			
+			{SMITH\kern-1pt, ELDER\kern-1pt, AND CO\kern-1.8pt.\kern-1.8pt, CORNHILL\kern-1pt.}
+			\vspace*{-0.5ex}
+			
+			\centerline{\rule{2em}{1pt}}
+			\vspace*{0.5ex}
+			
+			{1847\kern-2pt.}
+		\end{minipage}};
+	\end{tikzpicture}
+
+\end{titlingpage}
+
+\begin{titlingpage}
+
+	\begin{tikzpicture}[remember picture, overlay]
+		\node[anchor=center, text centered] at (current page.center) {%
+			\begin{minipage}{\linewidth}
+				\bodoni\addfontfeatures{LetterSpace=4}\normalsize
+				\centering
+				{\itshape\addfontfeatures{LetterSpace=4} ILLUSTRATED BY F. H. TOWNSEND}
+				\vspace*{8cm}
+				
+				{\larger\canterbury\addfontfeatures{LetterSpace=8} London}
+				\vspace*{0.5ex}
+				
+				{\addfontfeatures{LetterSpace=14}SERVICE \& PATON}
+				\vspace*{0.5ex}
+				
+				{\addfontfeatures{LetterSpace=2}\scriptsize 5 HENRIETTA STREET}
+				\vspace*{0.5ex}
+				
+				{\oldstyle\addfontfeatures{LetterSpace=4} 1897}	
+		\end{minipage}};
+	\end{tikzpicture}
+	
+\end{titlingpage}
+
+\begin{titlingpage}
+	
+	\begin{tikzpicture}[remember picture, overlay]
+	\node[anchor=north, text centered] at (current page.north) {%
+		\begin{minipage}{\linewidth}
+			\addfontfeatures{LetterSpace=6}\normalsize
+			\centering
+			\vspace{6cm}						
+			{\scriptsize TO}\\[1.275ex]
+			{\large W. M. THACKERAY, ESQ.,}\\[0.75ex]
+			{\scriptsize THIS WORK}\\[0.75ex]
+			{\scriptsize IS RESPECTFULLY INSCRIBED}\\[0.75ex]
+			{\scriptsize BY}\\[1.275ex]
+			{\large THE AUTHOR}
+		\end{minipage}};
+	\end{tikzpicture}
+		
+\end{titlingpage}
+
+\frontmatter
+
+\clearpage
+\tableofcontents*
+
+\include{chapters/preface}
+
+\mainmatter
+\addcontentsline{toc}{part}{Jane Eyre}
+
+\include{chapters/1}
+\include{chapters/2}
+\include{chapters/3}
+\include{chapters/4}
+\include{chapters/5}
+\include{chapters/6}
+\include{chapters/7}
+\include{chapters/8}
+\include{chapters/9}
+\include{chapters/10}
+\include{chapters/11}
+\include{chapters/12}
+\include{chapters/13}
+\include{chapters/14}
+\include{chapters/15}
+\include{chapters/16}
+\include{chapters/17}
+\include{chapters/18}
+\include{chapters/19}
+\include{chapters/20}
+\include{chapters/21}
+\include{chapters/22}
+\include{chapters/23}
+\include{chapters/24}
+\include{chapters/25}
+\include{chapters/26}
+\include{chapters/27}
+\include{chapters/28}
+\include{chapters/29}
+\include{chapters/30}
+\include{chapters/31}
+\include{chapters/32}
+\include{chapters/33}
+\include{chapters/34}
+\include{chapters/35}
+\include{chapters/36}
+\include{chapters/37}
+\include{chapters/38}
+
+\clearpage
+
+%\begin{vplace}
+%\begin{center}
+%	\includegraphics[width=5cm]{symbols/bird_1.pdf}
+%\end{center}
+%\end{vplace}
+
+\appendix
+\backmatter
+
+% Print info
+\settypeoutlayoutunit{mm}
+\typeoutlayout
+\typeoutstandardlayout
+
+\end{document}
