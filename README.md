@@ -6,3 +6,5 @@ The full version is set in *Garamond Premier Pro* with layered initials in *LTC 
 
 The digital tracings have been created using *potrace*.
 
+![Sample](sample.png)
+
