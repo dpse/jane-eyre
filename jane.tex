@@ -45,7 +45,7 @@ nopatch % breaks csquotes in verse otherwise
 \usepackage{selnolig}
 \usepackage{lettrine}
 \usepackage{fontspec}
-\usepackage{realscripts}
+%\usepackage{realscripts}
 \usepackage{fnpct}
 
 \usepackage[maxlevel=3,autostyle,autopunct,strict,french=guillemets,german=guillemets]{csquotes}
@@ -148,9 +148,10 @@ nopatch % breaks csquotes in verse otherwise
 	SmallCapsFeatures={LetterSpace=6},
 	%Kerning={On, Uppercase},
 	%%Scale=MatchLowercase,
+	RawFeature={+oalt}
 }
 
-%\setmainfont{Garamond Premier Pro}[RawFeature=+oalt] % Optical sizes are loaded automatically
+%\setmainfont{Garamond Premier Pro} % Optical sizes are loaded automatically
 \setmainfont{EB Garamond}
 
 \newfontfamily\baskerville{Baskerville MT Std}
@@ -234,7 +235,7 @@ nopatch % breaks csquotes in verse otherwise
 \strictpagecheck
 
 % Footnote style
-%\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+\usepackage[perpage,symbol*]{footmisc}
 
 % Default float placement
 \setfloatlocations{figure}{htbp}
