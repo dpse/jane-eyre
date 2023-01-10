@@ -42,6 +42,7 @@ nopatch % breaks csquotes in verse otherwise
 
 \usepackage[all]{nowidow} %Try to avoid widows
 \usepackage{lua-widow-control}
+\usepackage{selnolig}
 \usepackage{lettrine}
 \usepackage{fontspec}
 \usepackage{realscripts}
@@ -156,12 +157,12 @@ nopatch % breaks csquotes in verse otherwise
 \newfontfamily\bodoni{Bodoni LT Pro}
 \newfontfamily\canterbury{Canterbury}
 
-\newcommand{\SWshape}{\itshape\addfontfeatures{ItalicFeatures={Style=Swash,Contextuals={Swash}},Contextuals={Alternate},Ligatures={Rare}}}
-\newcommand{\textSW}[1]{{\SWshape #1}}
+\newcommand*{\SWshape}{\itshape\addfontfeatures{ItalicFeatures={Style=Swash,Contextuals={Swash}},Contextuals={Alternate},Ligatures={Rare}}}
+\newcommand*{\textSW}[1]{{\SWshape #1}}
 \newcommand*{\fraction}[1]{{\addfontfeatures{Fractions=On}#1}}
-\newcommand{\oldstyle}{\addfontfeatures{Numbers={OldStyle,Proportional}}}
-\newcommand{\lining}{\addfontfeatures{Numbers={Lining,Proportional}}}
-\newcommand{\monospaced}{\addfontfeatures{Numbers={Monospaced}}}
+\newcommand*{\oldstyle}{\addfontfeatures{Numbers={OldStyle,Proportional}}}
+\newcommand*{\lining}{\addfontfeatures{Numbers={Lining,Proportional}}}
+\newcommand*{\monospaced}{\addfontfeatures{Numbers={Monospaced}}}
 \newcommand*{\fleuron}{\symbol{\string"2766}}
 \newcommand*{\fleuronr}{\symbol{\string"2767}}
 \newcommand*{\et}{{\addfontfeature{Alternate=2}\&}}
@@ -187,7 +188,7 @@ nopatch % breaks csquotes in verse otherwise
 %\definecolor{lettrinecolor}{cmyk}{.85,.24,.54,.04}
 %\definecolor{lettrinecolor}{cmyk}{0.03,1.0,0.63,0.12}
 \definecolor{lettrinecolor}{cmyk}{0.0,1.0,0.91,0.37}
-\newcommand{\initialmaker}[1]{%
+\newcommand*{\initialmaker}[1]{%
 	\firstlayer{\color{black!100}#1}%
 	\llap{\secondlayer{\color{black!0}#1}}%
 	%\llap{\thirdlayer{\color{black!75!red}#1}}%
@@ -211,8 +212,8 @@ nopatch % breaks csquotes in verse otherwise
 \def\zzdef#1\relax{\edef\L@parshape{\the\numexpr\count@-1\relax\space #1}}
 \makeatother
 
-%\newcommand{\Lettrine}[2]{\lettrine[lines=4,depth=1,loversize=0.05,lhang=0.05]{\initialmaker{#1}}{#2}}
-\newcommand{\Lettrine}[2]{\lettrine[lines=4,depth=0,loversize=0.05,lhang=0.05]{#1}{#2}}
+%\newcommand*{\Lettrine}[2]{\lettrine[lines=4,depth=1,loversize=0.05,lhang=0.05]{\initialmaker{#1}}{#2}}
+\newcommand*{\Lettrine}[2]{\lettrine[lines=4,depth=0,loversize=0.05,lhang=0.05]{#1}{#2}}
 
 % Set new penalties for orphans and widows
 \clubpenalty=9996
@@ -258,18 +259,18 @@ nopatch % breaks csquotes in verse otherwise
 \AtBeginEnvironment{quote}{}
 \AtBeginEnvironment{quotation}{}
 \AtBeginEnvironment{verse}{\setquotestyle{verse}\itshape} %\small
-\newcommand{\settoversewidth}[2]{\settowidth{#1}{\itshape{}#2}}
+\newcommand*{\settoversewidth}[2]{\settowidth{#1}{\itshape{}#2}}
 
 % Abbreviations
 \makeatletter
-\newcommand\etc{{\addfontfeature{Alternate=0}\&}c\@ifnextchar.{}{.\@}}
-\newcommand\ie{i.e\@ifnextchar.{}{.\@}}
-\newcommand\Mr{Mr\@ifnextchar.{}{.\@}}
-\newcommand\Mrs{Mrs\@ifnextchar.{}{.\@}}
-\newcommand\St{St\@ifnextchar.{}{.\@}}
-\newcommand\AM{\textsc{am}}
-\newcommand\PM{\textsc{pm}}
-\newcommand\AD{\textsc{ad}}
+\newcommand*\etc{{\addfontfeature{Alternate=0}\&}c\@ifnextchar.{}{.\@}}
+\newcommand*\ie{i.e\@ifnextchar.{}{.\@}}
+\newcommand*\Mr{Mr\@ifnextchar.{}{.\@}}
+\newcommand*\Mrs{Mrs\@ifnextchar.{}{.\@}}
+\newcommand*\St{St\@ifnextchar.{}{.\@}}
+\newcommand*\AM{\textsc{am}}
+\newcommand*\PM{\textsc{pm}}
+\newcommand*\AD{\textsc{ad}}
 \makeatother
 
 % Page size
@@ -323,11 +324,11 @@ nopatch % breaks csquotes in verse otherwise
 	%\renewcommand*{\printchaptername}{\centering}
 	%\renewcommand*{\printchapternum}{\chapnumfont\ifanappendix \thechapter \else \numtoName{\c@chapter}\fi}
 	
-	%\renewcommand\chapternamenum{}
-	\renewcommand\printchaptername{}
-	\renewcommand\printchapternum{}
-	\renewcommand\printchapternonum{}
-	\renewcommand\printchaptertitle[1]{\centering{\chaptitlefont ##1}}
+	%\renewcommand*\chapternamenum{}
+	\renewcommand*\printchaptername{}
+	\renewcommand*\printchapternum{}
+	\renewcommand*\printchapternonum{}
+	\renewcommand*\printchaptertitle[1]{\centering{\chaptitlefont ##1}}
 	
 	%\renewcommand*{\afterchaptertitle}{%
 	%	\vskip\onelineskip \hrule\vskip \afterchapskip}
@@ -342,29 +343,29 @@ nopatch % breaks csquotes in verse otherwise
 \renewcommand*{\cftpartpagefont}{\scshape}
 %\renewcommand*{\cftpartpresnum}{\addfontfeatures{Numbers=Lining}\color{red}}
 %\renewcommand*{\cftpartaftersnum}{\color{black}}
-\renewcommand{\partnumberline}[1]{}% Gobble part number in ToC
+\renewcommand*{\partnumberline}[1]{}% Gobble part number in ToC
 \renewcommand*{\cftchapterfont}{\itshape}
 \renewcommand*{\cftchapterpagefont}{\itshape}
 %\renewcommand*{\cftchapterpresnum}{\addfontfeatures{Numbers=Lining}\color{red}}
 %\renewcommand*{\cftchapteraftersnum}{\color{black}}
 %\renewcommand*{\cftfigurefont}{\small}
 %\renewcommand*{\cfttablefont}{\small}
-\renewcommand{\chapternumberline}[1]{}% Gobble chapter number in ToC
-%\renewcommand{\cftchapterdotsep}{\cftdotsep}% Chapter dots in ToC
+\renewcommand*{\chapternumberline}[1]{}% Gobble chapter number in ToC
+%\renewcommand*{\cftchapterdotsep}{\cftdotsep}% Chapter dots in ToC
 \makeatletter
 %\setlength{\cftbeforepartskip}{1.0em \@plus\p@} % Default it 2.25 em
 \makeatother
-%\renewcommand{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fontchar{bullet.06}}}
-\renewcommand{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fleuronr}}
+%\renewcommand*{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fontchar{bullet.06}}}
+\renewcommand*{\aftertoctitle}{\afterchaptertitle\addchapterornament{\fleuronr}}
 
-%\renewcommand\chaptermark[1]{\markboth{##1}{##1}}
+%\renewcommand*\chaptermark[1]{\markboth{##1}{##1}}
 
 % Adjust TOC width
 %\setlength\cftchapternumwidth{3em}
 \cftsetindents{part}{3.0em}{3.0em}
 \cftsetindents{chapter}{3.0em}{3.0em}
-\renewcommand{\cftpartafterpnum}{\hspace*{3.0em}}
-\renewcommand{\cftchapterafterpnum}{\hspace*{3.0em}}
+\renewcommand*{\cftpartafterpnum}{\hspace*{3.0em}}
+\renewcommand*{\cftchapterafterpnum}{\hspace*{3.0em}}
 
 \newcommand*{\Chapter}[1]{\chapter*[#1]{#1}}
 \newcommand*{\FChapter}[2]{%
@@ -419,7 +420,8 @@ nopatch % breaks csquotes in verse otherwise
 %\includeonly{chapters/1}
 
 \begin{document}
-	
+
+\thispagestyle{empty}\null\cleardoublepage
 \markboth{\thetitle}{}
 
 %\begin{titlingpage}
@@ -500,7 +502,7 @@ nopatch % breaks csquotes in verse otherwise
 	\begin{tikzpicture}[remember picture, overlay]
 	\node[anchor=north, text centered] at (current page.north) {%
 		\begin{minipage}{\linewidth}
-			\addfontfeatures{LetterSpace=6}\normalsize
+			\normalfont\addfontfeatures{LetterSpace=6}\normalsize
 			\centering
 			\vspace{6cm}						
 			{\scriptsize TO}\\[1.275ex]
